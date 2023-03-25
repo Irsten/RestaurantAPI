@@ -20,12 +20,10 @@ namespace RestaurantAPI.Services
     {
         private readonly RestaurantDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly ILogger<RestaurantService> _logger;
         public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<int> CreateRestaurant(CreateRestaurantDto dto)
@@ -70,8 +68,6 @@ namespace RestaurantAPI.Services
         }
         public async Task Delete(int id)
         {
-            _logger.LogError($"Restaurant with id: {id} DELETE action invoked.");
-
             var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Id == id);
             if (restaurant == null) { throw new NotFoundExcepiton("Restaurant not found."); }
             _dbContext.Restaurants.Remove(restaurant);

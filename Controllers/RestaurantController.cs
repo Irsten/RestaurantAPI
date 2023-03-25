@@ -33,7 +33,7 @@ namespace RestaurantAPI.Controllers
             return Ok();
         }
 
-        [HttpGet("get-all")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
         {
             var restaurants = await _restaurantService.GetAll();
