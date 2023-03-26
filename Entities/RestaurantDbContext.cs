@@ -8,6 +8,8 @@ namespace RestaurantAPI.Entities
         public DbSet<Restaurant> Restaurants { get; set;}
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Dish> Dishes { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         public RestaurantDbContext(IConfiguration configuration)
         {
@@ -60,6 +62,30 @@ namespace RestaurantAPI.Entities
 
             modelBuilder.Entity<Address>()
                 .Property(r => r.PostalCode)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(r => r.Email)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(r => r.FirstName)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(r => r.LastName)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(r => r.PasswordHash)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(r => r.RoleId)
+                .IsRequired();
+
+            modelBuilder.Entity<Role>()
+                .Property(r => r.Name)
                 .IsRequired();
         }
 
