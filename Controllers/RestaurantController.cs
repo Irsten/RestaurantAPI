@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
 using RestaurantAPI.Services;
+using System.Security.Claims;
 
 namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurant")]
     [ApiController]
+    [Authorize]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -19,10 +22,12 @@ namespace RestaurantAPI.Controllers
             _restaurantService = restaurantService;
         }
 
-        [HttpPost("create-restaurant")]
-        public async Task<ActionResult> CreateRestaurant([FromBody] CreateRestaurantDto dto)
+        [HttpPost("create")]
+        [Authorize(Roles = "Admin, Manager")]
+        public async Task<ActionResult> Create([FromBody] CreateRestaurantDto dto)
         {
-            var id = await _restaurantService.CreateRestaurant(dto);
+            var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var id = await _restaurantService.Create(dto);
             return Created($"/api/restaurant/{id}", null);
         }
 
@@ -33,21 +38,22 @@ namespace RestaurantAPI.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
         {
             var restaurants = await _restaurantService.GetAll();
             return Ok(restaurants);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("get/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<RestaurantDto>> GetById([FromRoute] int id)
         {
             var restaurant = await _restaurantService.GetById(id);
             return Ok(restaurant);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             await _restaurantService.Delete(id);
