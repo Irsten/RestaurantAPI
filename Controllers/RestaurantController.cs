@@ -16,7 +16,6 @@ namespace RestaurantAPI.Controllers
     {
         private readonly IRestaurantService _restaurantService;
 
-
         public RestaurantController(IRestaurantService restaurantService)
         {
             _restaurantService = restaurantService;
@@ -39,9 +38,9 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll([FromQuery] RestaurantQuery query)
         {
-            var restaurants = await _restaurantService.GetAll();
+            var restaurants = await _restaurantService.GetAll(query);
             return Ok(restaurants);
         }
 
