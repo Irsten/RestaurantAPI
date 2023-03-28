@@ -71,6 +71,15 @@ builder.Host.UseNLog();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendClient", optionsBuilder =>
+        optionsBuilder.AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithOrigins(builder.Configuration["AllowedOrigins"])
+        );
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -80,6 +89,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => 
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
 }
+
+app.UseCors("FrontendClient");
 
 var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<RestaurantSeeder>();
