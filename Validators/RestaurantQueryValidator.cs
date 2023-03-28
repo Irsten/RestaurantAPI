@@ -16,7 +16,7 @@ namespace RestaurantAPI.Validators
 
             RuleFor(r => r.PageSize).Custom((value, context) =>
             {
-                if (allowedPageSizes.Contains(value)
+                if (allowedPageSizes.Contains(value))
                 {
                     context.AddFailure("PageSize", $"PageSize must be in [{string.Join(", ", allowedPageSizes)}]");
                 }

@@ -4,17 +4,13 @@ namespace RestaurantAPI.Entities
 {
     public class RestaurantDbContext : DbContext
     {
-        private readonly IConfiguration _configuration;
         public DbSet<Restaurant> Restaurants { get; set;}
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 
-        public RestaurantDbContext(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,11 +83,6 @@ namespace RestaurantAPI.Entities
             modelBuilder.Entity<Role>()
                 .Property(r => r.Name)
                 .IsRequired();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
         }
     }
 }
